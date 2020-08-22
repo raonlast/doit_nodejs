@@ -1,0 +1,12 @@
+.login_page {
+    width: 360px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form {
+    text-align: center;
+    display: inline-block;
+    max-width: 360px;
+}
