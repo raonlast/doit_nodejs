@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "start:dev": "nodemon server.js"
   },
   "author": "",
   "license": "ISC",
@@ -23,7 +24,11 @@
     "mongodb": "^3.5.9",
     "mongoose": "^5.9.26",
     "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
     "path": "^0.12.7",
     "serve-static": "^1.14.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
   }
 }

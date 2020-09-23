@@ -17,6 +17,8 @@ var expressSession = require('express-session');
 var passport = require('passport');
 var flash = require('connect-flash');
 
+
+
 var app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -25,6 +27,7 @@ app.use(bodyParser.json());
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname +'/css'));
 
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 
 app.use(cookieParser());
@@ -36,6 +39,9 @@ app.use(expressSession({
 }));
 
 
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
 
 
 app.set('views', __dirname + '/views');
@@ -43,24 +49,17 @@ app.set('view engine', 'ejs');
 console.log('뷰 엔진이 ejs로 설정되었습니다.');
 
 
-var user = require('./routes/user');
 
 
-var errorHandler = expressErrorHandler({
-    static: {
-        '404': './public/404.html'
-    }
-});
 
-app.use(expressErrorHandler.httpError(404));
-app.use(errorHandler);
+
 
 var database;
 
 function createUserSchema(database) {
     
     database.userSchema = require('./database/user_schema').createSchema(mongoose);
-
+    
     database.userModel = mongoose.model("users", database.userSchema);
     console.log('userModel 정의함');
     
@@ -70,8 +69,19 @@ var database = require('./database/database');
 
 var config = require('./config');
 
+var router_leader = require('./routes/route_loader');
+
+var router = express.Router();
+
+router_leader.init(app, router);
+
+router.route('/').get((req, res) => {
+    console.log('/ 패스 요청됨');
+    res.render('index.ejs');
+});
 
 app.use(passport.initialize());
+    
 app.use(passport.session());
 app.use(flash());
 
@@ -90,6 +100,7 @@ passport.use('local-login', new LocalStrategy({
 
         if(!user) {
             console.log('계정이 일치하지 않음');
+            console.log(email);
             return done(null, false, req.flash('loginMessage', '등록된 계정이 없습니다.'));
         }
 
@@ -136,26 +147,15 @@ passport.use('local-signup', new LocalStrategy({
     });
 }));
 
-passport.serializeUser(function(user, done) {
-    console.log('serializeUser 호출됨');
-    console.dir(user);
-
-    done(null, user);
-});
-
-passport.deserializeUser(function(user, done) {
-    console.log('deserializeUser 호출됨');
-    console.dir(user);
-
-    done(null, user);
-});
 
 
-var router = express.Router();
-var route_leader = require('./routes/route_loader');
-route_leader.init(app, express.Router());
 
-router.route('/').get(function(req, res) {
+
+// var route_leader = require('./routes/route_loader');
+// route_leader.init(app, router);
+
+
+app.get('/', (req, res) => {
     console.log('/ 패스 요청됨');
     res.render('index.ejs');
 });
@@ -181,6 +181,8 @@ app.post('/signup', passport.authenticate('local-signup', {
     failureRedirect: '/signup',
     failureFlash: true
 }));
+
+
 
 router.route('/profile').get(function(req, res) {
     console.log('/profile 패스 요청됨');
@@ -209,17 +211,40 @@ app.get('/logout', function(req, res) {
 })
 
 
+passport.serializeUser(function(user, done) {
+    console.log('serializeUser 호출됨');
+    console.dir(user);
 
+    done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+    console.log('deserializeUser 호출됨');
+    console.dir(user);
+
+    done(null, user);
+});
+
+
+
+app.use(expressErrorHandler.httpError(404));
+app.use(errorHandler);
+
+var errorHandler = expressErrorHandler({
+    static: {
+        '404': './public/404.html'
+    }
+});
 
 console.log('config.server_port : %d', config.server_port);
-app.set('port', process.env.PORT || config.server_port);
+app.set('port', process.env.PORT || 3000);
 // const hostname = '172.30.1.47';
 
-app.listen(app.get('port'), () => {
+var server = app.listen('3000', () => {
     console.log('server has started : ' + app.get('port'));
-    // console.log(__dirname);
+    console.log(__dirname);
 
     database.init(app, config);
 }); 
-
+    
  
