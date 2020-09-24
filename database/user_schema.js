@@ -5,11 +5,14 @@ var Schema = { };
 Schema.createSchema = (mongoose) => {
    var userSchema = mongoose.Schema({
       email: {type: String, 'default': ''},
-      hashed_password: {type: String, required: true, 'default': ' '},
-      salt: {type: String, required: true},
+      hashed_password: {type: String, 'default': ' '},
+      salt: {type: String},
       name: {type: String, index: 'hashed', 'default': ' '},
       created_at: {type: Date, index: {unique: false}, 'default': Date.now},
-      updated_at: {type: Date, index: {unique: false}, 'default': Date.now}
+      updated_at: {type: Date, index: {unique: false}, 'default': Date.now},
+      provider: {type: String, 'default': ''},
+      authToken: {type: String, 'default': ''},
+      facebook: { }
    });
 
    userSchema
