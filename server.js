@@ -17,9 +17,12 @@ var expressSession = require('express-session');
 var flash = require('connect-flash');
 
 
+var passport = require('passport');
+
 var facebook = require('./config/passport/facebook');
 facebook(app, passport);
 
+var database = require('./database/database'); 
 
 var app = express();
 
@@ -44,22 +47,23 @@ app.use(expressSession({
 }));
 
 
+app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 
+// var database;
 
-var database;
-
-function createUserSchema(database) {
+// function createUserSchema(database) {
     
-    database.userSchema = require('./database/user_schema').createSchema(mongoose);
+//     database.userSchema = require('./database/user_schema').createSchema(mongoose);
     
-    database.userModel = mongoose.model("users", database.userSchema);
-    console.log('userModel 정의함');
+//     database.userModel = mongoose.model("users", database.userSchema);
+//     console.log('userModel 정의함');
     
-    // user.init(database, database.userSchema, database.userModel);
-}
-var database = require('./database/database'); 
+//     // user.init(database, database.userSchema, database.userModel);
+// }
 
 
 
@@ -80,7 +84,7 @@ router_leader.init(app, router);
 // import passportConfig from './config/passport';
 
 
-var passport = require('passport');
+
 var passportConfig = require('./config/passport');
 
 // require('./routes/user_passport')(app, router, passport);
@@ -115,10 +119,8 @@ var errorHandler = expressErrorHandler({
 
 
 
-app.use(passport.initialize());
-    
-app.use(passport.session());
-app.use(flash());
+
+
 
 
 

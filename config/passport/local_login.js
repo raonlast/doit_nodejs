@@ -7,7 +7,7 @@ module.exports = new LocalStrategy({
 }, function(req, email, password, done) {
     console.log('passport의 local-login 호출됨 : ' + email + ', ' + password);
 
-    var database = app.get('database');
+    var database = req.app.get('database');
     database.userModel.findOne({'email': email}, function(err, user) {
         if(err) {return done(err);}
 

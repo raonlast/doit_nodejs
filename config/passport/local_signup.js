@@ -9,7 +9,7 @@ module.exports = new LocalStrategy({
     console.log('passport의 local-signup 호출됨 : ' + email + ', ' + password + ', ' + paramName);
 
     process.nextTick(function() {
-        var database = app.get('database');
+        var database = req.app.get('database');
         database.userModel.findOne({'email': email}, function(err, user) {
             if(err) {
                 return done(err);
