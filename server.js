@@ -121,9 +121,6 @@ var errorHandler = expressErrorHandler({
 
 
 
-
-
-
 console.log('config.server_port : %d', config.server_port);
 app.set('port', process.env.PORT || 3000);
 // const hostname = '172.30.1.47';
