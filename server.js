@@ -19,8 +19,7 @@ var flash = require('connect-flash');
 
 var passport = require('passport');
 
-var facebook = require('./config/passport/facebook');
-facebook(app, passport);
+
 
 var database = require('./database/database'); 
 
@@ -88,11 +87,12 @@ router_leader.init(app, router);
 var passportConfig = require('./config/passport');
 
 // require('./routes/user_passport')(app, router, passport);
-
-
-
 passportConfig(app, passport);
 
+
+
+var facebook = require('./config/passport/facebook');
+facebook(app, passport);
 
 
 
