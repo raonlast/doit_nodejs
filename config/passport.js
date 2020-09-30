@@ -1,6 +1,7 @@
 var local_login = require('./passport/local_login');
 var local_signup= require('./passport/local_signup');
-var facebook = require('./passport/facebook');
+var facebook = require('./passport/facebook')
+var User = require('../database/user_schema');
 
 
 module.exports = (app, passport) => {
